@@ -1,15 +1,46 @@
 # files-to-consul-kv
 
+Simple utility for bulk loading sets of [Consul key-value](https://www.consul.io/docs/agent/kv.html) entries via the [transactions API](https://www.consul.io/api/txn.html) where the source of those values exist on disk in a directory structure. 
 
+For example given a simple directory structure like:
+```
+cd mykvs/
+
+$ find . -print
+.
+./sub
+./sub/key2
+./key1
+
+$ cat key1 
+val1
+
+$ cat sub/key2 
+val2
+```
+
+You could use `fs2consulkv.py` to set all these in Consul under some root path:
 ```
  ./fs2consulkv.py \
-    --fs-kv-path ./consul-kv/ \
+    --fs-kv-path ./mykvs \
     --consul-url https://[consul-fqdn][:port] \
     --consul-acl-token xxxxxxx \
     --consul-data-center optional-dc \
     --consul-kv-root some/root/path/
  ```
 
+Would result in your KVs in consul at:
+```
+https://[consul-fqdn][:port]/ui/mydc/kv/some/root/path/key1 = val1
+https://[consul-fqdn][:port]/ui/mydc/kv/some/root/path/sub/key2 = val2
+```
+
+Run via Docker:
+https://hub.docker.com/r/bitsofinfo/files-to-consul-kv
+
+```
+docker run bitsofinfo/files-to-consul-kv fs2consulkv.py --help
+```
 
 
 ## Usage
