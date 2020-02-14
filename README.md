@@ -35,13 +35,20 @@ https://[consul-fqdn][:port]/ui/mydc/kv/some/root/path/key1 = val1
 https://[consul-fqdn][:port]/ui/mydc/kv/some/root/path/sub/key2 = val2
 ```
 
+## Docker
+
 Run via Docker:
 https://hub.docker.com/r/bitsofinfo/files-to-consul-kv
 
 ```
-docker run bitsofinfo/files-to-consul-kv fs2consulkv.py --help
+docker run -i -v `pwd`/mykvs:/kvsource \
+   bitsofinfo/files-to-consul-kv fs2consulkv.py \
+   --fs-kv-path /kvsource \
+    --consul-url https://[consul-fqdn][:port] \
+    --consul-acl-token xxxxxxx \
+    --consul-data-center optional-dc \
+    --consul-kv-root some/root/path/
 ```
-
 
 ## Usage
 
