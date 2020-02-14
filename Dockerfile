@@ -4,7 +4,7 @@ ARG GIT_TAG=master
 
 RUN echo GIT_TAG=${GIT_TAG}
 
-# install the loader under /usr/local/bin
+# install under /usr/local/bin
 RUN apk update ; \
     apk upgrade ; \
     apk add git ; \
