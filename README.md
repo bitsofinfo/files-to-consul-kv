@@ -44,10 +44,10 @@ https://hub.docker.com/r/bitsofinfo/files-to-consul-kv
 docker run -i -v `pwd`/mykvs:/kvsource \
    bitsofinfo/files-to-consul-kv fs2consulkv.py \
    --fs-kv-path /kvsource \
-    --consul-url https://[consul-fqdn][:port] \
-    --consul-acl-token xxxxxxx \
-    --consul-data-center optional-dc \
-    --consul-kv-root some/root/path/
+   --consul-url https://[consul-fqdn][:port] \
+   --consul-acl-token xxxxxxx \
+   --consul-data-center optional-dc \
+   --consul-kv-root some/root/path/
 ```
 
 ## Usage
