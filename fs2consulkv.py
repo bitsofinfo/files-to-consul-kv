@@ -44,6 +44,9 @@ def main():
     parser.add_argument('-x', '--skip-prompt', action='store_true', default=False, \
         help="Skip confirmation and prompt")
 
+    parser.add_argument('-n', '--retain-trailing-newlines', action='store_true', default=False, \
+        help="Retain trailing newline chars (\\n) in values files and do not strip them. Default behavior is to strip them")
+
     parser.add_argument('-l', '--log-level', dest='log_level', default="DEBUG", \
         help="log level, DEBUG, INFO, etc")
     parser.add_argument('-b', '--log-file', dest='log_file', default=None, \
@@ -52,6 +55,9 @@ def main():
     args = parser.parse_args()
 
     dump_help = False
+
+    if not args.consul_kv_root:
+        dump_help = True
    
     if dump_help:
         parser.print_help()
@@ -89,7 +95,11 @@ def main():
                 targetkv = filepath.replace(args.fs_kv_path,"")
 
                 with open (filepath, "r") as myfile:
-                    value=myfile.read()
+                    value = myfile.read()
+
+                if not args.retain_trailing_newlines:
+                     if value.endswith('\n'):
+                        value = value[:-1]
 
                 kvs.append({
                     "KV": {
