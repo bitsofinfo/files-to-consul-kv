@@ -101,6 +101,9 @@ def main():
                      if value.endswith('\n'):
                         value = value[:-1]
 
+                if targetkv.startswith('/'):
+                    targetkv = targetkv[1:]
+
                 kvs.append({
                     "KV": {
                     "Verb": "set",
