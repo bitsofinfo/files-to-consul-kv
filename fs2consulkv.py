@@ -85,7 +85,7 @@ def main():
         kvs = []
 
         if args.consul_kv_root.strip().endswith('/'):
-            args.consul_kv_root = args.strip().consul_kv_root[:-1]
+            args.consul_kv_root = args.consul_kv_root.strip()[:-1]
 
         for root, dirs, files in os.walk(args.fs_kv_path):
 
