@@ -38,6 +38,9 @@ def main():
     parser.add_argument('-t', '--consul-acl-token', dest='consul_acl_token', default=None, \
         help="Consul acl token, required")
 
+    parser.add_argument('-f', '--consul-acl-token-file', dest='consul_acl_token_file', default=None, \
+        help="Consul acl token file, path to a file that contains the token value, required")
+
     parser.add_argument('-d', '--consul-data-center', dest='consul_data_center', default=None, \
         help="Consul data-center, optional.")
 
@@ -73,9 +76,22 @@ def main():
     if args.consul_data_center is not None:
         url += "?dc={}".format(args.consul_data_center)
 
+    consul_acl_token = args.consul_acl_token
+    if args.consul_acl_token_file:
+        with open (args.consul_acl_token_file, "r") as tokenfile:
+            value = tokenfile.read()
+            if value and value.strip() == '':
+                logging.error("--consul-acl-token-file {} contains nothing!".format(args.consul_acl_token_file))
+                sys.exit(1)
+            else:
+                consul_acl_token = value
+
+    if not consul_acl_token or consul_acl_token.strip() == '':
+        logging.error("--consul-acl-token-file or --consul-acl-token is required!")
+
     headers = {
         'Content-Type': "application/json",
-        'X-Consul-Token': args.consul_acl_token,
+        'X-Consul-Token': consul_acl_token,
         'User-Agent': "github.com/bitsofinfo/files-to-consul-kv",
         'Accept': "*/*",
         'Cache-Control': "no-cache"
@@ -94,8 +110,8 @@ def main():
             
                 targetkv = filepath.replace(args.fs_kv_path,"")
 
-                with open (filepath, "r") as myfile:
-                    value = myfile.read()
+                with open (filepath, "r") as kvfile:
+                    value = kvfile.read()
 
                 if not args.retain_trailing_newlines:
                      if value.endswith('\n'):

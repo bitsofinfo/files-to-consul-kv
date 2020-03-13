@@ -56,8 +56,9 @@ docker run -i -v `pwd`/mykvs:/kvsource \
  $ ./fs2consulkv.py  -h
 
 usage: fs2consulkv.py [-h] [-p FS_KV_PATH] [-k CONSUL_KV_ROOT] [-c CONSUL_URL]
-                      [-t CONSUL_ACL_TOKEN] [-d CONSUL_DATA_CENTER] [-x] [-n]
-                      [-l LOG_LEVEL] [-b LOG_FILE]
+                      [-t CONSUL_ACL_TOKEN] [-f CONSUL_ACL_TOKEN_FILE]
+                      [-d CONSUL_DATA_CENTER] [-x] [-n] [-l LOG_LEVEL]
+                      [-b LOG_FILE]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -73,6 +74,9 @@ optional arguments:
                         (default: None)
   -t CONSUL_ACL_TOKEN, --consul-acl-token CONSUL_ACL_TOKEN
                         Consul acl token, required (default: None)
+  -f CONSUL_ACL_TOKEN_FILE, --consul-acl-token-file CONSUL_ACL_TOKEN_FILE
+                        Consul acl token file, path to a file that contains
+                        the token value, required (default: None)
   -d CONSUL_DATA_CENTER, --consul-data-center CONSUL_DATA_CENTER
                         Consul data-center, optional. (default: None)
   -x, --skip-prompt     Skip confirmation and prompt (default: False)
