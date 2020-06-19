@@ -1,3 +1,7 @@
+# 1.0.3
+
+added `--consul-kv-root-file`
+
 # 1.0.2
 
 added `--consul-acl-token-file`

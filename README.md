@@ -52,10 +52,11 @@ docker run -i -v `pwd`/mykvs:/kvsource \
 
 ## Usage
 
- ```
- $ ./fs2consulkv.py  -h
+```
+$ ./fs2consulkv.py  -h
 
-usage: fs2consulkv.py [-h] [-p FS_KV_PATH] [-k CONSUL_KV_ROOT] [-c CONSUL_URL]
+usage: fs2consulkv.py [-h] [-p FS_KV_PATH] [-k CONSUL_KV_ROOT]
+                      [-z CONSUL_KV_ROOT_FILE] [-c CONSUL_URL]
                       [-t CONSUL_ACL_TOKEN] [-f CONSUL_ACL_TOKEN_FILE]
                       [-d CONSUL_DATA_CENTER] [-x] [-n] [-l LOG_LEVEL]
                       [-b LOG_FILE]
@@ -68,7 +69,13 @@ optional arguments:
                         (default: ./)
   -k CONSUL_KV_ROOT, --consul-kv-root CONSUL_KV_ROOT
                         Root path in Consul KV by which all new keys will be
-                        set, required. i.e. some/root/path (default: None)
+                        set, required. i.e. 'some/root/path' (default: None)
+  -z CONSUL_KV_ROOT_FILE, --consul-kv-root-file CONSUL_KV_ROOT_FILE
+                        Path to a file that contains the consul-kv-root
+                        argument value, optional, can be used instead of
+                        --consul-kv-root i.e. /path/to/consul-kv-root.txt
+                        where the file contents contains the value
+                        'some/root/path' (default: None)
   -c CONSUL_URL, --consul-url CONSUL_URL
                         Consul url, required. i.e. http[s]://[fqdn][:port]
                         (default: None)

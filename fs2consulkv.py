@@ -30,7 +30,11 @@ def main():
         help="Full or relative path to filesystem directory containing the KV structure to send to consul")
 
     parser.add_argument('-k', '--consul-kv-root', dest='consul_kv_root', default=None, \
-        help="Root path in Consul KV by which all new keys will be set, required. i.e. some/root/path")
+        help="Root path in Consul KV by which all new keys will be set, required. i.e. 'some/root/path'")
+
+    parser.add_argument('-z', '--consul-kv-root-file', dest='consul_kv_root_file', default=None, \
+        help="Path to a file that contains the consul-kv-root argument value, optional, can be used instead of --consul-kv-root " + \
+            "i.e. /path/to/consul-kv-root.txt where the file contents contains the value 'some/root/path'")
 
     parser.add_argument('-c', '--consul-url', dest='consul_url', default=None, \
         help="Consul url, required. i.e. http[s]://[fqdn][:port]")
@@ -59,7 +63,7 @@ def main():
 
     dump_help = False
 
-    if not args.consul_kv_root:
+    if not args.consul_kv_root and not args.consul_kv_root_file:
         dump_help = True
    
     if dump_help:
@@ -88,6 +92,15 @@ def main():
 
     if not consul_acl_token or consul_acl_token.strip() == '':
         logging.error("--consul-acl-token-file or --consul-acl-token is required!")
+        sys.exit(1)
+
+
+    consul_kv_root = args.consul_kv_root
+    if args.consul_kv_root_file:
+        with open (args.consul_kv_root_file, "r") as f:
+            consul_kv_root = f.read()
+        logging.debug("sourced --consul-kv-root-file at {} with value {}".format(args.consul_kv_root_file,consul_kv_root))
+
 
     headers = {
         'Content-Type': "application/json",
@@ -100,8 +113,8 @@ def main():
     try:
         kvs = []
 
-        if args.consul_kv_root.strip().endswith('/'):
-            args.consul_kv_root = args.consul_kv_root.strip()[:-1]
+        if consul_kv_root.strip().endswith('/'):
+            consul_kv_root = consul_kv_root.strip()[:-1]
 
         for root, dirs, files in os.walk(args.fs_kv_path):
 
@@ -123,14 +136,14 @@ def main():
                 kvs.append({
                     "KV": {
                     "Verb": "set",
-                    "Key": "{}/{}".format(args.consul_kv_root,targetkv),
+                    "Key": "{}/{}".format(consul_kv_root,targetkv),
                     "Value": "{}".format(base64.b64encode(value.encode("utf-8")).decode("utf-8"))
                     }
                 })
 
         if not args.skip_prompt:
             print(json.dumps(kvs,indent=2))
-            proceed = input("\n\nYou are about to 'set' the above consul KV paths:\n... that were consumed from {}\n... will be PUT against {}\n... and set relative from {}/\n\nAre you sure?: (y|n):".format(args.fs_kv_path,url,args.consul_kv_root)).strip()
+            proceed = input("\n\nYou are about to 'set' the above consul KV paths:\n... that were consumed from {}\n... will be PUT against {}\n... and set relative from {}/\n\nAre you sure?: (y|n):".format(args.fs_kv_path,url,consul_kv_root)).strip()
             if proceed.lower() != 'y':
                 logging.info("Exiting, confirmation prompt input was: " + proceed)
                 sys.exit(1)
