@@ -156,6 +156,8 @@ def main():
         logging.info("Number of kvs totals: {}, this has to be split up " \
             "into {} 64 kv chunks: https://github.com/hashicorp/consul/issues/7278".format(len(kvs),len(kv_chunks)))
         
+        exit_with_exit_code = 0
+
         for kvchunk in kv_chunks:
 
             logging.info("PUTing chunk with {} keys @ {}".format(len(kvchunk),url))
@@ -165,15 +167,14 @@ def main():
             if response.status_code == 200:
                 logging.debug("KVs 'set' OK: {}".format(response.content))
             else:
-                print(response.status_code)
                 logging.error("KVs 'set' http response code: {} FAILED: {} ".format(response.status_code,json.loads(response.content)))
+                exit_with_exit_code = 1
 
+        sys.exit(exit_with_exit_code)
 
     except Exception as e:
         logging.exception("error PUTing consul KVs via /txn: POST-DATA={} ERROR={} " \
             .format(kvs,str(sys.exc_info()[:2])))
-
-
 
 if __name__ == '__main__':
     main()

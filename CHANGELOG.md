@@ -1,3 +1,7 @@
+# 1.0.4
+
+exit non-zero on KV push failures
+
 # 1.0.3
 
 added `--consul-kv-root-file`
