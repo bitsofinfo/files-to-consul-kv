@@ -121,7 +121,7 @@ def main():
             for name in files:
                 filepath = os.path.join(root, name)
             
-                targetkv = filepath.replace(args.fs_kv_path,"")
+                targetkv = filepath.replace(args.fs_kv_path, "", 1)
 
                 with open (filepath, "r") as kvfile:
                     value = kvfile.read()
