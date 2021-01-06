@@ -1,3 +1,7 @@
+# 1.0.5
+
+* [#4 fix possible targetkv name mangling](https://github.com/bitsofinfo/files-to-consul-kv/pull/4)
+* add license
 # 1.0.4
 
 exit non-zero on KV push failures
