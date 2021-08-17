@@ -54,6 +54,9 @@ def main():
     parser.add_argument('-n', '--retain-trailing-newlines', action='store_true', default=False, \
         help="Retain trailing newline chars (\\n) in values files and do not strip them. Default behavior is to strip them")
 
+    parser.add_argument('-s', '--sleep-delay', dest='sleep_delay', default=0, \
+        help="Delay [in seconds] in kv upload loop, to avoid overwhelming the consul server. Default behavior is 0.000 seconds")
+
     parser.add_argument('-l', '--log-level', dest='log_level', default="DEBUG", \
         help="log level, DEBUG, INFO, etc")
     parser.add_argument('-b', '--log-file', dest='log_file', default=None, \
@@ -163,6 +166,8 @@ def main():
             logging.info("PUTing chunk with {} keys @ {}".format(len(kvchunk),url))
 
             response = requests.request("PUT", url, data=json.dumps(kvchunk), headers=headers)
+
+            time.sleep(sleep_delay)
             
             if response.status_code == 200:
                 logging.debug("KVs 'set' OK: {}".format(response.content))
