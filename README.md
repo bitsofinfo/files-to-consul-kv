@@ -91,6 +91,13 @@ optional arguments:
                         Retain trailing newline chars (\n) in values files and
                         do not strip them. Default behavior is to strip them
                         (default: False)
+  -s SLEEP_DELAY, --sleep-delay SLEEP_DELAY
+                        Delay [in seconds] in kv upload loop, to avoid
+                        overwhelming the consul server. Default behavior is
+                        0.000 seconds (default: 0)
+  -u CHUNK_SIZE, --chunk-size CHUNK_SIZE
+                        Number of KV pairs uploaded at once. Default is 64,
+                        the maximum allowed. (default: 64)
   -l LOG_LEVEL, --log-level LOG_LEVEL
                         log level, DEBUG, INFO, etc (default: DEBUG)
   -b LOG_FILE, --log-file LOG_FILE
