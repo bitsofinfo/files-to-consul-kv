@@ -56,6 +56,8 @@ def main():
 
     parser.add_argument('-s', '--sleep-delay', dest='sleep_delay', default=0, \
         help="Delay [in seconds] in kv upload loop, to avoid overwhelming the consul server. Default behavior is 0.000 seconds")
+    parser.add_argument('-u', '--chunk-size', dest='chunk_size', default=64, \
+        help="Number of KV pairs uploaded at once. Default is 64, the maximum allowed.")
 
     parser.add_argument('-l', '--log-level', dest='log_level', default="DEBUG", \
         help="log level, DEBUG, INFO, etc")
@@ -154,10 +156,10 @@ def main():
 
         # we can only max send 64 per request...
         # https://github.com/hashicorp/consul/issues/7278
-        kv_chunks = list(divide_chunks(kvs, 64)) 
+        kv_chunks = list(divide_chunks(kvs, int(args.chunk_size))) 
 
         logging.info("Number of kvs totals: {}, this has to be split up " \
-            "into {} 64 kv chunks: https://github.com/hashicorp/consul/issues/7278".format(len(kvs),len(kv_chunks)))
+            "into {} {} kv chunks: https://github.com/hashicorp/consul/issues/7278".format(len(kvs),len(kv_chunks),int(args.chunk_size)))
         
         exit_with_exit_code = 0
 
@@ -167,7 +169,7 @@ def main():
 
             response = requests.request("PUT", url, data=json.dumps(kvchunk), headers=headers)
 
-            time.sleep(sleep_delay)
+            time.sleep(float(args.sleep_delay))
             
             if response.status_code == 200:
                 logging.debug("KVs 'set' OK: {}".format(response.content))
