@@ -1,3 +1,7 @@
+# 1.0.6
+
+* added sleep/chunk size options: https://github.com/bitsofinfo/files-to-consul-kv/pull/5
+ 
 # 1.0.5
 
 * [#4 fix possible targetkv name mangling](https://github.com/bitsofinfo/files-to-consul-kv/pull/4)
